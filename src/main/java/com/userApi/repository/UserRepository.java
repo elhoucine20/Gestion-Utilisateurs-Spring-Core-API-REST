@@ -1,4 +1,4 @@
-package com.tulisko.repository;
+package com.userApi.repository;
 
 public class UserRepository {
 }

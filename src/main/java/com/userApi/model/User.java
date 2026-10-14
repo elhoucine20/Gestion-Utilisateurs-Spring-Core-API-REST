@@ -1,10 +1,12 @@
-package com.tulisko.model;
+package com.userApi.model;
 
-import com.tulisko.model.enums.RoleUser;
-import com.tulisko.model.enums.StatuUser;
+import com.userApi.model.enums.RoleUser;
+import com.userApi.model.enums.StatuUser;
 
+import java.beans.ConstructorProperties;
 import java.time.LocalDate;
 import java.util.UUID;
+
 
 public class User {
 
@@ -17,6 +19,7 @@ public class User {
     private LocalDate createdAt;
     private LocalDate updatedAt;
 
+    @ConstructorProperties({"name,email,password,role"})
     public User(String name, String email, String password, RoleUser role) {
         this.id = UUID.randomUUID();
         this.name = name;
@@ -26,6 +29,8 @@ public class User {
         this.statu = StatuUser.ACTIVE;
         this.createdAt = LocalDate.now();
     }
+
+    public User(){}
 
     public UUID getId() {
         return id;

@@ -1,4 +1,4 @@
-package com.tulisko.service;
+package com.userApi.service;
 
 public class UserService {
 }

@@ -1,0 +1,89 @@
+package config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
+import javax.sql.DataSource;
+
+/**
+ * import org.springframework.beans.factory.annotation.Value;
+ * import org.springframework.context.annotation.Configuration;
+ * import org.springframework.context.annotation.PropertySource;
+ * import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+ * import org.springframework.transaction.annotation.EnableTransactionManagement;
+ *
+ * @Configuration
+ * @PropertySource("classpath:application.properties") // read properties
+ * @EnableTransactionManagement // utilise les transactions
+ * @EnableJpaRepositories // peux database connectet avec jpa repository
+ * public class DatabaseConfig {
+ *
+ *     @Value("db.url")
+ *     private static String url;
+ *
+ *     @Value("db.username")
+ *     private static String username;
+ *
+ *     @Value("db.password")
+ *     private static String password;
+ * }
+ */
+
+@Configuration
+public class DatabaseConfig {
+
+    @Bean
+    public DataSource dataSource(){  // DataSource => fournit les connexions a database H2
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("org.h2.Driver");
+        // org.h2.Driver ? C'est le nom complet de la classe Java qui permet au pilote JDBC de communiquer avec H2.
+        dataSource.setUrl("jdbc:h2:mem:userApiDb");
+        dataSource.setUsername("userApiDb");
+        dataSource.setPassword("12345678");
+
+        System.out.println("DataSource H2 configure !");
+
+        return dataSource;
+    }
+}
+
+/**
+ *
+ package com.example.config;
+
+ import javax.sql.DataSource;
+
+ import org.springframework.context.annotation.Bean;
+ import org.springframework.context.annotation.Configuration;
+ import org.springframework.context.annotation.PropertySource;
+ import org.springframework.core.env.Environment;
+ import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
+ @Configuration
+ @PropertySource("classpath:application.properties")
+ public class DatabaseConfig {
+
+ @Bean
+ public DataSource dataSource(Environment env) {
+ DriverManagerDataSource ds = new DriverManagerDataSource();
+
+ ds.setDriverClassName(
+ env.getProperty("spring.datasource.driverClassName")
+ );
+ ds.setUrl(
+ env.getProperty("spring.datasource.url")
+ );
+ ds.setUsername(
+ env.getProperty("spring.datasource.username")
+ );
+ ds.setPassword(
+ env.getProperty("spring.datasource.password", "")
+ );
+
+ return ds;
+ }
+ }
+
+ */
