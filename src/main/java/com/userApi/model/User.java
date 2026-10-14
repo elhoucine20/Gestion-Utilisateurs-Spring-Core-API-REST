@@ -2,26 +2,36 @@ package com.userApi.model;
 
 import com.userApi.model.enums.RoleUser;
 import com.userApi.model.enums.StatuUser;
+import jakarta.persistence.*;
 
-import java.beans.ConstructorProperties;
 import java.time.LocalDate;
 import java.util.UUID;
 
-
+@Entity
+@Table(name = "users")
 public class User {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private  String name;
+
+    @Column(nullable = false, unique = true)
     private String email;
+    @Column(nullable = false)
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private RoleUser role;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private StatuUser statu;
     private LocalDate createdAt;
     private LocalDate updatedAt;
 
-    @ConstructorProperties({"name,email,password,role"})
     public User(String name, String email, String password, RoleUser role) {
-        this.id = UUID.randomUUID();
         this.name = name;
         this.email = email;
         this.password = password;
@@ -90,5 +100,11 @@ public class User {
 
     public void setUpdatedAt(LocalDate updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+
+    public void onCreate(){
+        if (this.statu == null) this.statu = StatuUser.ACTIVE;
+        if (this.createdAt == null) this.createdAt = LocalDate.now();
     }
 }

@@ -8,11 +8,12 @@ import org.springframework.stereotype.Controller;
 
 @Configuration
 @ComponentScan(value = "com.userApi",excludeFilters = {
-        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
-                Controller.class,WebConfig.class
+        @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = {
+                Controller.class
         })
 })
 @Import(DatabaseConfig.class) // acces a les properties dans DatabaseConfig?java
+// WebConfig scan le controller et RootConfig charge le rest dans DatabaseConfig
 public class RootConfig {
         
 }

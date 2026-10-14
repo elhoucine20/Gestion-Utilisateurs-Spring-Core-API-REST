@@ -1,8 +1,12 @@
 package config;
 
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRegistration;
 import org.springframework.lang.Nullable;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
+   // WebInitailizer cree le DispatcherServlet
     public class WebInitailizer extends AbstractAnnotationConfigDispatcherServletInitializer{ // configurer servlet dans depart de l'app (root et web)
     @Nullable
     @Override
@@ -19,5 +23,14 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
     @Override
     protected String[] getServletMappings() { // requits http
         return new String[]{"/"};
+    }
+
+    @Override
+    public void onStartup(ServletContext servletContext)throws ServletException{
+        super.onStartup(servletContext);
+        ServletRegistration.Dynamic h2 = servletContext.addServlet("h2-console","org.h2.server.web.JakartaWebServlet"); //
+        h2.addMapping("/h2-console/*"); //
+        h2.setInitParameter("-ifNotExists", "");
+        h2.setLoadOnStartup(2); //
     }
 }
