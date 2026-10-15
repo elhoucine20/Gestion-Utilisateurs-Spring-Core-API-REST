@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.security.spec.KeySpec;
 import java.util.Base64;
@@ -35,7 +36,8 @@ public class PasswordUtils {
 
     public boolean verifypassword(String password,String storedHash,String salt){
         String hash = hashPassword(password,salt);
-        return hash.equals(storedHash);
+        //return hash.equals(storedHash);
+        return MessageDigest.isEqual(hash.getBytes(),storedHash.getBytes());
     }
 
 }
