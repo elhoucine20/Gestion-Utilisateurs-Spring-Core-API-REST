@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ResponseStatusException.class)
-    // va recuperer ResponseStatusException 404 ou 409
+    // if not found user or email deplique
     public ResponseEntity<Map<String, Object>> handleStatus(ResponseStatusException ex, HttpServletRequest req) {
         HttpStatus status = HttpStatus.valueOf(ex.getStatusCode().value());
         return ResponseEntity.status(status).body(build(status, ex.getReason(), req));
@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    // les autre errors de spring 415-405  (on handle le reel error par cette lethod)
+    // les autre errors de spring 415-405  (handle le reel error par cette lethod)
     public ResponseEntity<Map<String, Object>> handleOther(Exception ex, HttpServletRequest req) {
         HttpStatus status = (ex instanceof ErrorResponse er)
                 ? HttpStatus.valueOf(er.getStatusCode().value())

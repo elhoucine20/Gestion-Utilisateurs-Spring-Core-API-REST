@@ -5,6 +5,7 @@ import com.userApi.dto.UserResponse;
 import com.userApi.dto.UserUpdateRequest;
 import com.userApi.mapper.UserMapper;
 import com.userApi.model.User;
+import com.userApi.model.enums.StatuUser;
 import com.userApi.repository.Impl.ImplUserRepo;
 import com.userApi.util.PasswordUtils;
 import lombok.RequiredArgsConstructor;
@@ -25,12 +26,12 @@ public class UserService {
 
 
     private User findUser(UUID id){
-        return userRepo.findById(id)
+        return userRepo.findByIdAndStatu(id, StatuUser.ACTIVE)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found !!"));
     }
 
     public List<UserResponse> getUsers(){
-        return userRepo.findAll().stream().map(userMapper::toResponse).toList();
+        return userRepo.findAllByStatu(StatuUser.ACTIVE).stream().map(userMapper::toResponse).toList();
     }
 
     public UserResponse getUserById(UUID userId){
@@ -59,6 +60,8 @@ public class UserService {
     }
 
     public void deleteUser(UUID userId){
-        userRepo.deleteById(userId);
+        User user = findUser(userId);
+        user.setStatu(StatuUser.DESACTIVE);
+        userRepo.save(user);
     }
 }
