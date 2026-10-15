@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
-@Repository
+@Repository // pas oblegatoir
 public interface ImplUserRepo extends JpaRepository<User, UUID> {}

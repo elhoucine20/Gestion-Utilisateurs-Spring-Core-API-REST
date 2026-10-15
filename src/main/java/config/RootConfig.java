@@ -12,7 +12,7 @@ import org.springframework.stereotype.Controller;
                 Controller.class
         })
 })
-@Import(DatabaseConfig.class) // acces a les properties dans DatabaseConfig?java
+@Import(DatabaseConfig.class) // charge les beans de DatabaseConfig (DataSource, JPA, transactions)
 // WebConfig scan le controller et RootConfig charge le rest dans DatabaseConfig
 public class RootConfig {
         

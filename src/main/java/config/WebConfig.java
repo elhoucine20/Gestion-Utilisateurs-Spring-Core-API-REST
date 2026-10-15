@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
 //@ComponentScan(basePackageClasses = Controller.class) //
-@EnableWebMvc //
+@EnableWebMvc // read PostMapping et GetMapping ... et transferer json vers objet java
 @ComponentScan("com.userApi.controller") //  WebConfig scan le controller
 public class WebConfig {
 

@@ -14,10 +14,13 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @Column(nullable = false)
     private  String name;
 
     @Column(nullable = false, unique = true)
     private String email;
+
     @Column(nullable = false)
     private String password;
 
@@ -28,8 +31,14 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private StatuUser statu;
+
+    @Column(nullable = false)
     private LocalDate createdAt;
+
     private LocalDate updatedAt;
+
+    @Column(nullable = false)
+    private String salt;
 
     public User(String name, String email, String password, RoleUser role) {
         this.name = name;
@@ -103,8 +112,21 @@ public class User {
     }
 
 
+    @PrePersist
     public void onCreate(){
         if (this.statu == null) this.statu = StatuUser.ACTIVE;
         if (this.createdAt == null) this.createdAt = LocalDate.now();
+    }
+    @PreUpdate
+    public void onUpdate(){
+        this.updatedAt = LocalDate.now();
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 }
