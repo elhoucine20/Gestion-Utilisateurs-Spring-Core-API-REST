@@ -129,4 +129,13 @@ public class User {
     public void setSalt(String salt) {
         this.salt = salt;
     }
+
+    public StatuUser getStatu() {
+        return statu;
+    }
+
+    public void setStatu(StatuUser statu) {
+        this.statu = statu;
+    }
 }
+

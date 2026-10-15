@@ -1,10 +1,12 @@
 package com.userApi.service;
 
+import com.userApi.dto.UserCreateRequest;
+import com.userApi.dto.UserResponse;
+import com.userApi.dto.UserUpdateRequest;
+import com.userApi.mapper.UserMapper;
 import com.userApi.model.User;
 import com.userApi.repository.Impl.ImplUserRepo;
 import com.userApi.util.PasswordUtils;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -19,28 +21,41 @@ public class UserService {
 
     private final ImplUserRepo  userRepo;
     private final PasswordUtils passwordUtils;
+    private final UserMapper userMapper;
 
 
-    public List<User> getUsers(){
-        return userRepo.findAll();
+    private User findUser(UUID id){
+        return userRepo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "user not found !!"));
     }
 
-    public User getUserById(UUID userId){
-        return userRepo.findById(userId).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND,"user not found !!"));
+    public List<UserResponse> getUsers(){
+        return userRepo.findAll().stream().map(userMapper::toResponse).toList();
     }
 
-    public User addUser(User user){
+    public UserResponse getUserById(UUID userId){
+        return userMapper.toResponse(findUser(userId));
+    }
+
+    public UserResponse addUser(UserCreateRequest request){
+        if (userRepo.existsByEmail(request.getEmail())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "email deja utilise");
+        }
+        User user = userMapper.toEntity(request);
         user.setSalt(passwordUtils.generateSalt());
         user.setPassword(passwordUtils.hashPassword(user.getPassword(), user.getSalt()));
-        return userRepo.save(user);
+        return userMapper.toResponse(userRepo.save(user));
     }
-    public User updateUser(UUID id,User user){
-        User exist = getUserById(id);
-        exist.setName(user.getName());
-        exist.setEmail(user.getEmail());
-        exist.setPassword(passwordUtils.hashPassword(user.getPassword(), exist.getSalt()));
-        exist.setRole(user.getRole());
-        return userRepo.save(exist);
+    public UserResponse updateUser(UUID id, UserUpdateRequest request){
+        if (userRepo.existsByEmailAndIdNot(request.getEmail(), id)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "email deja utilise");
+        }
+        User exist = findUser(id);
+        userMapper.updateEntity(exist,request);
+        if (request.getPassword() != null && !request.getPassword().isBlank()){
+            exist.setPassword(passwordUtils.hashPassword(request.getPassword(), exist.getSalt()));
+        }
+        return userMapper.toResponse(userRepo.save(exist));
     }
 
     public void deleteUser(UUID userId){

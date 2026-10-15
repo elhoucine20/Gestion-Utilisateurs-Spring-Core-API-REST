@@ -1,5 +1,6 @@
 package com.userApi.util;
 
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKeyFactory;
@@ -9,7 +10,7 @@ import java.security.SecureRandom;
 import java.security.spec.KeySpec;
 import java.util.Base64;
 
-@Service
+@Component
 public class PasswordUtils {
     public String generateSalt(){
         SecureRandom secureRandom = new SecureRandom();

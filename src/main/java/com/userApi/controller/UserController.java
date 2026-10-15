@@ -1,8 +1,11 @@
 package com.userApi.controller;
 
-import com.userApi.model.User;
+import com.userApi.dto.UserCreateRequest;
+import com.userApi.dto.UserResponse;
+import com.userApi.dto.UserUpdateRequest;
 import com.userApi.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,32 +14,34 @@ import java.util.UUID;
 
 @RestController  //
 @RequestMapping("/users")
+@AllArgsConstructor
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @GetMapping // simplifie @RequestMapping(method = RequestMethod.GET)
-    public List<User> getUsers(){
+    public List<UserResponse> getUsers(){
         return userService.getUsers();
     }
 
     @GetMapping("/{id}")
-    public User getUser(
+    public UserResponse getUser(
             @PathVariable //
             UUID id){
         return userService.getUserById(id);
     }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED) //
-    public User addUser(
+    public UserResponse addUser(
+            @Valid
             @RequestBody //
-            User user){
+            UserCreateRequest user){
         return userService.addUser(user);
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable UUID id,@RequestBody User user){
+    public UserResponse updateUser(@PathVariable UUID id, @Valid @RequestBody UserUpdateRequest user){
         return userService.updateUser(id,user);
     }
 
