@@ -52,6 +52,7 @@ public class UserServiceTest {
     // add user
     @Test
     void addUser_valide_hashLePasswordEtSauvegarde(){
+        // arrange
         UserCreateRequest request = new UserCreateRequest();
         request.setName("lahcen");
         request.setEmail("lahcen@gmail.com");
@@ -67,10 +68,10 @@ public class UserServiceTest {
         when(userMapper.toResponse(user)).thenReturn(response);
         //mockito return false by default (if email n'exist pas)
 
-        // act ()
+        // act => using la method que nous avons tester
         UserResponse result = userService.addUser(request);
 
-        // assert  (pour verifiy)
+        // assert => check result
         assertSame(response,result); // compare return de service avec mapper
         assertEquals("salt123",user.getSalt()); // verify salt
         assertEquals("hash123",user.getPassword()); // verify password
@@ -85,9 +86,10 @@ public class UserServiceTest {
         // DB => email deja exist
         when(userRepo.existsByEmail("lahcen@gmail.com")).thenReturn(true);
 
-        // ACT + ASSERT : recuperer et return exception
-        ResponseStatusException exception = assertThrows(ResponseStatusException.class,()->userService.addUser(request));
-        assertEquals(HttpStatus.CONFLICT,exception.getStatusCode());
+        // ACT + ASSERT : using method et check result
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class,
+                ()->userService.addUser(request));  // if exception => test pass avec success et reurne pour check
+        assertEquals(HttpStatus.CONFLICT,exception.getStatusCode()); // assertEquals => if not equal test echoue
 
         verify(userRepo,never()).save(any());
     }
@@ -95,12 +97,15 @@ public class UserServiceTest {
     // ================= getUserById =================
     @Test
     void getUserById_existantReturnReponse(){
+
         UUID id = UUID.randomUUID();
         User user = OneUser();
         UserResponse response = OneResponse();
+
         when(userRepo.findByIdAndStatu(id,StatuUser.ACTIVE)).thenReturn(Optional.of(user));
         when(userMapper.toResponse(user)).thenReturn(response);
-        assertSame(response,userService.getUserById(id));
+        assertSame(response,userService.getUserById(id)); //assertSame => la meme objet pas comme
+
     }
 
     @Test
@@ -124,7 +129,7 @@ public class UserServiceTest {
         assertEquals(1,result.size());
         assertSame(response,result.get(0));
         // sans findAll
-        verify(userRepo,never()).findAll();
+        verify(userRepo,never()).findAll(); // verifie if methode appeler || avec never() l'opposer
     }
 
     // ================= updateUser =================
