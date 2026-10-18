@@ -41,7 +41,7 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories("com.userApi.repository")
+@EnableJpaRepositories("com.userApi.repository") // indique a Spring a rechercher sur les interfaces de repository
 public class DatabaseConfig {
 
     @Bean

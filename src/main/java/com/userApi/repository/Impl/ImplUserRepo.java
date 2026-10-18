@@ -12,6 +12,8 @@ import java.util.UUID;
 
 @Repository // pas oblegatoir
 public interface ImplUserRepo extends JpaRepository<User, UUID> {
+    // spring Data JPA est un module de spring que simplifie l'acces aux donnees en reduisant le code necessaire pour effectue les operations CRUD
+       // il resout le problem de ecrire les request sql manuelement
     public boolean existsByEmail(String email);
     public boolean existsByEmailAndIdNot(String email, UUID id);
 
